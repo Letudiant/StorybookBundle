@@ -54,8 +54,7 @@ class StorybookCacheWarmer implements CacheWarmerInterface
     private function generateSymfonyParameters(ConfigCacheInterface $cache): void
     {
         $parameters = [
-            'kernel_project_dir' => $this->projectDir,
-            'storybook_config' => $this->storybookConfig,
+            'storybook_bundle_config' => $this->storybookConfig,
             'twig_config' => $this->twigConfig,
             'twig_component_config' => $this->twigComponentConfig,
         ];

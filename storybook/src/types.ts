@@ -18,6 +18,16 @@ type ProxyPaths = string[] | string;
 
 export type SymfonyOptions = {
     /**
+     * Symfony project directory.
+     */
+    projectDir: string;
+
+    /**
+     * Storybook cache directory.
+     */
+    storybookCachePath: string;
+
+    /**
      * Symfony server URL.
      */
     server?: string;

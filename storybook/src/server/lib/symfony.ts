@@ -1,5 +1,12 @@
 import { exec } from 'child_process';
 import dedent from 'ts-dedent';
+import fs from 'node:fs';
+
+class SymfonyPreviewRenderingError extends Error {
+    constructor(public readonly errorPage: string) {
+        super('Unable to render preview.');
+    }
+}
 
 type CommandOptions = {
     /**
@@ -80,41 +87,49 @@ export const runSymfonyCommandJson = async <T = any>(
     }
 };
 
-export const getKernelProjectDir = async () => {
-    return (
-        await runSymfonyCommandJson<{ [p: string]: string }>('debug:container', ['--parameter=kernel.project_dir'])
-    )['kernel.project_dir'];
+export const generateSymfonyPreview = async (server: string) => {
+    const fetchUrl = new URL(`${server}/_storybook/preview`);
+
+    const response = await fetch(fetchUrl, {
+        method: 'GET',
+        headers: {
+            Accept: 'text/html',
+        },
+    });
+
+    const html = await response.text();
+
+    if (!response.ok) {
+        throw new SymfonyPreviewRenderingError(html);
+    }
+
+    return html;
+}
+
+type SymfonyConfiguration = {
+    storybook_bundle_config: StorybookBundleConfig;
+    twig_config: SymfonyTwigConfiguration;
+    twig_component_config: SymfonyTwigComponentConfiguration;
+}
+
+export const getSymfonyConfig = async (storybookCachePath: string): Promise<SymfonyConfiguration> => {
+    const filePath = `${storybookCachePath}/symfony_parameters.json`;
+
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 };
 
 type StorybookBundleConfig = {
-    storybook: {
-        runtime_dir: string;
-    };
-};
-
-export const getBundleConfig = async () => {
-    return (await runSymfonyCommandJson<StorybookBundleConfig>('debug:config', ['storybook']))['storybook'];
+    runtime_dir: string;
 };
 
 type SymfonyTwigComponentConfiguration = {
-    twig_component: {
-        anonymous_template_directory: string;
-        defaults: {
-            [p: string]: {
-                name_prefix: string;
-                template_directory: string;
-            };
+    anonymous_template_directory: string;
+    defaults: {
+        [p: string]: {
+            name_prefix: string;
+            template_directory: string;
         };
     };
-};
-
-export const getTwigComponentConfiguration = async () => {
-    return (
-        await runSymfonyCommandJson<SymfonyTwigComponentConfiguration>('debug:config', [
-            'twig_component',
-            '--resolve-env',
-        ])
-    )['twig_component'];
 };
 
 export type TwigComponentConfiguration = {
@@ -125,15 +140,9 @@ export type TwigComponentConfiguration = {
 };
 
 type SymfonyTwigConfiguration = {
-    twig: {
-        paths: {
-            [p: string]: string;
-        };
+    paths: {
+        [p: string]: string;
     };
-};
-
-export const getTwigConfiguration = async () => {
-    return (await runSymfonyCommandJson<SymfonyTwigConfiguration>('debug:config', ['twig', '--resolve-env']))['twig'];
 };
 
 export type TwigConfiguration = {

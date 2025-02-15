@@ -9,6 +9,7 @@ use Storybook\CacheWarmer\StorybookCacheWarmer;
 use Storybook\Command\GeneratePreviewCommand;
 use Storybook\Command\StorybookInitCommand;
 use Storybook\Controller\StorybookController;
+use Storybook\Controller\StorybookPreviewController;
 use Storybook\DependencyInjection\Compiler\CacheWarmerPass;
 use Storybook\DependencyInjection\Compiler\ComponentMockPass;
 use Storybook\EventListener\ProxyRequestListener;
@@ -80,6 +81,13 @@ class StorybookExtension extends Extension implements ConfigurationInterface, Pr
         $container->register('storybook.controller.render_story', StorybookController::class)
             ->setArgument(0, new Reference('storybook.story_renderer'))
             ->setArgument(1, new Reference('storybook.args_processor'))
+            ->addTag('controller.service_arguments')
+        ;
+
+        // Preview controller
+        $container->register('storybook.controller.preview', StorybookPreviewController::class)
+            ->setArgument(0, new Reference('twig'))
+            ->setArgument(1, new Reference('event_dispatcher'))
             ->addTag('controller.service_arguments')
         ;
 

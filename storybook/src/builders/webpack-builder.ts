@@ -4,6 +4,8 @@ import * as baseBuilder from '@storybook/builder-webpack5';
 import dedent from 'ts-dedent';
 
 export type BuilderOptions = {
+    projectDir?: string;
+    storybookCachePath?: string;
     server?: string;
     proxyPaths?: string | string[];
 };
@@ -28,7 +30,7 @@ export const start: typeof baseBuilder.start = async (options) => {
         `);
     }
 
-    const proxyPaths = ['/_storybook/render'];
+    const proxyPaths = ['/_storybook/render', '/_storybook/preview'];
 
     if (symfony.proxyPaths) {
         const paths = !Array.isArray(symfony.proxyPaths) ? [symfony.proxyPaths] : symfony.proxyPaths;
