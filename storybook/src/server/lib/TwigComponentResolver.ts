@@ -3,24 +3,40 @@ import path from 'path';
 import dedent from 'ts-dedent';
 
 export class TwigComponentResolver {
-    constructor(private config: TwigComponentConfiguration) {}
+    constructor(
+        private config: TwigComponentConfiguration,
+        private templatePathAliases: {
+            [p: string]: string;
+        }
+    ) {}
 
     resolveNameFromFile(file: string) {
         const stripDirectory = (file: string, dir: string) => {
             return file.replace(dir, '').replace(/^\//, '').replaceAll('/', ':').replace('.html.twig', '');
         };
 
+        const resolvePathAlias = (file: string) => {
+            for (const [alias, resolvedPath] of Object.entries(this.templatePathAliases)) {
+                if (file.startsWith(alias)) {
+                    return file.replace(alias, resolvedPath);
+                }
+            }
+            return file;
+        }
+
+        const resolvedFile = resolvePathAlias(file);
+
         for (const [namespace, twigDirectories] of Object.entries(this.config.namespaces)) {
-            const matchingDirectory = twigDirectories.find((dir) => file.startsWith(dir));
+            const matchingDirectory = twigDirectories.find((dir) => resolvedFile.startsWith(dir));
             if (matchingDirectory) {
-                const trimmedPath = stripDirectory(file, matchingDirectory);
+                const trimmedPath = stripDirectory(resolvedFile, matchingDirectory);
                 return namespace ? `${namespace}:${trimmedPath}` : trimmedPath;
             }
         }
 
         for (const anonymousDir of this.config.anonymousTemplateDirectory) {
-            if (file.startsWith(anonymousDir)) {
-                return stripDirectory(file, anonymousDir);
+            if (resolvedFile.startsWith(anonymousDir)) {
+                return stripDirectory(resolvedFile, anonymousDir);
             }
         }
 

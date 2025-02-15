@@ -23,17 +23,17 @@ function _interopNamespace(e) {
 
 var e__namespace = /*#__PURE__*/_interopNamespace(e);
 
-function h(n){for(var u=[],t=1;t<arguments.length;t++)u[t-1]=arguments[t];var r=Array.from(typeof n=="string"?[n]:n);r[r.length-1]=r[r.length-1].replace(/\r?\n([\t ]*)$/,"");var s=r.reduce(function(o,d){var p=d.match(/\n([\t ]+|(?!\s).)/g);return p?o.concat(p.map(function(f){var a,i;return (i=(a=f.match(/[\t ]/g))===null||a===void 0?void 0:a.length)!==null&&i!==void 0?i:0})):o},[]);if(s.length){var l=new RegExp(`
-[	 ]{`+Math.min.apply(Math,s)+"}","g");r=r.map(function(o){return o.replace(l,`
-`)});}r[0]=r[0].replace(/^\r?\n/,"");var c=r[0];return u.forEach(function(o,d){var p=c.match(/(?:^|\n)( *)$/),f=p?p[1]:"",a=o;typeof o=="string"&&o.includes(`
-`)&&(a=String(o).split(`
-`).map(function(i,y){return y===0?i:""+f+i}).join(`
-`)),c+=a+r[d+1];}),c}var g=h;var P=e__namespace.getConfig,B=e__namespace.bail,w=async n=>{let u=n.options.configType==="PRODUCTION",{symfony:t}=await n.options.presets.apply("frameworkOptions");if(!t.server)throw new Error(g`
+function h(o){for(var c=[],t=1;t<arguments.length;t++)c[t-1]=arguments[t];var r=Array.from(typeof o=="string"?[o]:o);r[r.length-1]=r[r.length-1].replace(/\r?\n([\t ]*)$/,"");var s=r.reduce(function(n,d){var p=d.match(/\n([\t ]+|(?!\s).)/g);return p?n.concat(p.map(function(f){var a,i;return (i=(a=f.match(/[\t ]/g))===null||a===void 0?void 0:a.length)!==null&&i!==void 0?i:0})):n},[]);if(s.length){var y=new RegExp(`
+[	 ]{`+Math.min.apply(Math,s)+"}","g");r=r.map(function(n){return n.replace(y,`
+`)});}r[0]=r[0].replace(/^\r?\n/,"");var u=r[0];return c.forEach(function(n,d){var p=u.match(/(?:^|\n)( *)$/),f=p?p[1]:"",a=n;typeof n=="string"&&n.includes(`
+`)&&(a=String(n).split(`
+`).map(function(i,l){return l===0?i:""+f+i}).join(`
+`)),u+=a+r[d+1];}),u}var g=h;var P=e__namespace.getConfig,B=e__namespace.bail,w=async o=>{let c=o.options.configType==="PRODUCTION",{symfony:t}=await o.options.presets.apply("frameworkOptions");if(!t.server)throw new Error(g`
         Cannot configure dev server.
         
         "server" option in "framework.options.symfony" is required for Storybook dev server to run.
         Update your main.ts|js file accordingly.
-        `);let r=["/_storybook/render","/_storybook/preview"];if(t.proxyPaths){let s=Array.isArray(t.proxyPaths)?t.proxyPaths:[t.proxyPaths];r.push(...s);}for(let s of r)n.router.use(s,httpProxyMiddleware.createProxyMiddleware({target:t.server,changeOrigin:!0,secure:u,logLevel:"debug",headers:{"X-Storybook-Proxy":"true"}}));return e__namespace.start(n)},k=e__namespace.build,O=e__namespace.corePresets,C=e__namespace.overridePresets;
+        `);let r=["/_storybook/render","/_storybook/preview"];if(t.proxyPaths){let s=Array.isArray(t.proxyPaths)?t.proxyPaths:[t.proxyPaths];r.push(...s);}for(let s of r)o.router.use(s,httpProxyMiddleware.createProxyMiddleware({target:t.server,changeOrigin:!0,secure:c,headers:{"X-Storybook-Proxy":"true"}}));return e__namespace.start(o)},k=e__namespace.build,O=e__namespace.corePresets,C=e__namespace.overridePresets;
 
 exports.bail = B;
 exports.build = k;

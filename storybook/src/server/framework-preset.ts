@@ -15,6 +15,9 @@ type BuildOptions = {
     twigComponent: TwigComponentConfiguration;
     twig: TwigConfiguration;
     additionalWatchPaths: string[];
+    templatePathAliases: {
+        [p: string]: string;
+    };
 };
 
 const getBuildOptions = async (symfonyOptions: SymfonyOptions) => {
@@ -22,7 +25,13 @@ const getBuildOptions = async (symfonyOptions: SymfonyOptions) => {
 
     const componentNamespaces: { [p: string]: string[] } = {};
 
-    const twigPaths: string[] = Object.keys(symfonyConfig.twig_config.paths).map((key) => `${symfonyOptions.projectDir}/${key}/`);
+    const twigPaths: string[] = Object.keys(symfonyConfig.twig_config.paths).map((key) => {
+        if (key.startsWith(symfonyOptions.projectDir)) {
+            return `${key}/`;
+        }
+
+        return `${symfonyOptions.projectDir}/${key}/`;
+    });
 
     if (twigPaths.length === 0) {
         twigPaths.push(`${symfonyOptions.projectDir}/templates`);
@@ -47,6 +56,7 @@ const getBuildOptions = async (symfonyOptions: SymfonyOptions) => {
             paths: twigPaths,
         },
         additionalWatchPaths: symfonyOptions.additionalWatchPaths || [],
+        templatePathAliases: symfonyOptions.templatePathAliases || {},
     } as BuildOptions;
 };
 
@@ -74,6 +84,7 @@ export const webpack: StorybookConfig['webpack'] = async (config, options) => {
                       }),
                 TwigLoaderPlugin.webpack({
                     twigComponentConfiguration: symfonyOptions.twigComponent,
+                    templatePathAliases: symfonyOptions.templatePathAliases,
                 }),
             ],
         ],

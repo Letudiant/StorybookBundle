@@ -41,6 +41,14 @@ export type SymfonyOptions = {
      * Additional paths to watch during compilation.
      */
     additionalWatchPaths?: string[];
+
+    /**
+     * When Storybook and Symfony are not on the same host (e.g. Symfony is Dockerized), mounted paths may differ.
+     * This option allows to map paths from Symfony host to Storybook host.
+     */
+    templatePathAliases?: {
+        [p: string]: string;
+    };
 };
 
 export type FrameworkOptions = {
