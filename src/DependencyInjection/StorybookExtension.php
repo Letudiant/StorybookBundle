@@ -6,7 +6,6 @@ use Storybook\ArgsProcessor\StorybookArgsProcessor;
 use Storybook\Attributes\AsArgsProcessor;
 use Storybook\Attributes\AsComponentMock;
 use Storybook\CacheWarmer\StorybookCacheWarmer;
-use Storybook\Command\GeneratePreviewCommand;
 use Storybook\Command\StorybookInitCommand;
 use Storybook\Controller\StorybookController;
 use Storybook\Controller\StorybookPreviewController;
@@ -151,13 +150,6 @@ class StorybookExtension extends Extension implements ConfigurationInterface, Pr
         // Proxy factory
         $container->register('storybook.component_proxy_factory', ComponentProxyFactory::class)
             ->setArgument(0, new AbstractArgument(\sprintf('Provided in "%s".', ComponentMockPass::class)));
-
-        // Internal commands
-        $container->register('storybook.generate_preview_command', GeneratePreviewCommand::class)
-            ->setArgument(0, new Reference('twig'))
-            ->setArgument(1, new Reference('event_dispatcher'))
-            ->addTag('console.command', ['name' => 'storybook:generate-preview'])
-        ;
 
         // Init command
         $container->register('storybook.init_command', StorybookInitCommand::class)
