@@ -255,12 +255,30 @@ const config: StorybookConfig = {
             
             /**
              * Symfony framework options.
-             * 
-             * These options only applies to the dev environment.
              */
             symfony: {
                 /**
-                 * Mandatory, the URL of the Symfony development server.
+                 * Mandatory, the absolute path of the Symfony application.
+                 * 
+                 * If you are using Docker for your Symfony application,
+                 * it must be the absolute path inside the Docker container.
+                 * In other cases, it must be the absolute path on your host machine.
+                 * 
+                 * @example '/var/www/html'
+                 *
+                 * @var string
+                 */
+                projectDir: '',
+                
+                /**
+                 * Mandatory, the absolute path of the Storybook cache path.
+                 *
+                 * @var string
+                 */
+                storybookCachePath: path.resolve(__dirname, '../var/cache/dev/storybook'),
+                
+                /**
+                 * Mandatory, the URL of the Symfony application server.
                  * 
                  * @var string
                  */
@@ -289,7 +307,18 @@ const config: StorybookConfig = {
                 additionalWatchPaths: [
                     'assets',
                     'var/tailwind/tailwind.built.css'
-                ]
+                ],
+
+                /**
+                 * Configure aliases for components paths resolution.
+                 *
+                 * Use this when Storybook and Symfony app are running on different hosts (like Docker).
+                 *
+                 * @var object
+                 */
+                templatePathAliases: {
+                    [path.resolve(__dirname, '..')]: '/var/www/html',
+                }
             }
         },
     },
