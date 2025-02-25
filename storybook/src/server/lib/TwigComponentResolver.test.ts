@@ -7,9 +7,16 @@ const twigComponentConfig = {
     namespaces: {
         '': [`${fixturesDir}/components`, `${fixturesDir}/twig_path`],
         Custom: [`${fixturesDir}/custom`],
+        Alias: [`${fixturesDir}/alias`],
     },
 };
-const resolver = new TwigComponentResolver(twigComponentConfig);
+
+const templatePathAliases = {
+    // Simulates a path alias for the "Source" directory
+    [`${fixturesDir}/alias/Source`]: `${fixturesDir}/alias/Target`,
+};
+
+const resolver = new TwigComponentResolver(twigComponentConfig, templatePathAliases);
 
 describe('resolveFileFromName', () => {
     it('resolves component path without namespace', () => {
@@ -96,5 +103,10 @@ describe('resolveNameFromFile', () => {
         const resolved = resolver.resolveNameFromFile(`${fixturesDir}/twig_path/Foo/Bar.html.twig`);
 
         expect(resolved).toEqual('Foo:Bar');
+    });
+    it('resolves aliased path', () => {
+        const resolved = resolver.resolveNameFromFile(`${fixturesDir}/alias/Source/Aliased.html.twig`);
+
+        expect(resolved).toEqual('Alias:Target:Aliased');
     });
 });

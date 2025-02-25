@@ -7,7 +7,7 @@ export class TwigComponentResolver {
         private config: TwigComponentConfiguration,
         private templatePathAliases: {
             [p: string]: string;
-        }
+        } = {}
     ) {}
 
     resolveNameFromFile(file: string) {
